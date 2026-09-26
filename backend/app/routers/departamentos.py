@@ -8,6 +8,8 @@ from backend.app.schemas.departamento import (
     DepartamentoResponse,
     DepartamentoUpdate,
 )
+from backend.app.dependencies import obter_utilizador_actual
+
 
 router = APIRouter(
     prefix="/departamentos",
@@ -16,7 +18,10 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[DepartamentoResponse])
-def listar_departamentos(db: Session = Depends(get_db)):
+def listar_departamentos(
+    db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(obter_utilizador_actual),
+):
     return db.query(Departamento).order_by(Departamento.nome).all()
 
 
@@ -24,6 +29,7 @@ def listar_departamentos(db: Session = Depends(get_db)):
 def obter_departamento(
     departamento_id: int,
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(obter_utilizador_actual),
 ):
     departamento = (
         db.query(Departamento)
@@ -48,6 +54,7 @@ def obter_departamento(
 def criar_departamento(
     dados: DepartamentoCreate,
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(obter_utilizador_actual),
 ):
     existente = (
         db.query(Departamento)
@@ -82,6 +89,7 @@ def actualizar_departamento(
     departamento_id: int,
     dados: DepartamentoUpdate,
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(obter_utilizador_actual),
 ):
     departamento = (
         db.query(Departamento)
@@ -129,6 +137,7 @@ def actualizar_departamento(
 def desactivar_departamento(
     departamento_id: int,
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(obter_utilizador_actual),
 ):
     departamento = (
         db.query(Departamento)
