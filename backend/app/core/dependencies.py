@@ -14,7 +14,8 @@ def obter_utilizador_actual(
 
     try:
         payload = verificar_access_token(token)
-    except Exception:
+    except Exception as erro:
+        print(f"ERRO JWT: {type(erro).__name__}: {erro}")
         raise HTTPException(
             status_code=401,
             detail="Token inválido ou expirado.",
