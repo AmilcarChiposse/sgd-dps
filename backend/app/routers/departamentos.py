@@ -1,6 +1,7 @@
 ﻿from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+from backend.app.database.models import documento
+from backend.app.services.historico import registar_historico
 from backend.app.database.database import get_db
 from backend.app.database.models.departamento import Departamento
 from backend.app.schemas.departamento import (
@@ -154,7 +155,16 @@ def desactivar_departamento(
 
     departamento.activo = False
 
-    db.commit()
-    db.refresh(departamento)
+    db.add(documento)
+    db.flush()
 
-    return departamento
+    registar_historico(
+    db=db,
+    accao="Documento criado",
+    descricao=f"Documento {documento.numero_entrada} registado no sistema.",
+    utilizador_id=int(utilizador_actual["sub"]),
+    documento_id=documento.id,
+)
+
+    db.commit()
+    db.refresh(documento)
