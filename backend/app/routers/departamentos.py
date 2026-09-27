@@ -8,12 +8,13 @@ from backend.app.schemas.departamento import (
     DepartamentoResponse,
     DepartamentoUpdate,
 )
-from backend.app.dependencies import obter_utilizador_actual
+from backend.app.core.dependencies import obter_utilizador_actual
 
 
 router = APIRouter(
     prefix="/departamentos",
     tags=["Departamentos"],
+     dependencies=[Depends(obter_utilizador_actual)],
 )
 
 

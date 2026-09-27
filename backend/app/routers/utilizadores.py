@@ -3,6 +3,9 @@ from sqlalchemy.orm import Session
 from backend.app.core.security import criar_hash_senha
 from backend.app.database.database import get_db
 from backend.app.database.models.utilizador import Utilizador
+from backend.app.core.dependencies import obter_utilizador_actual
+from backend.app.core.dependencies import exigir_perfil
+
 from backend.app.schemas.utilizador import (
     UtilizadorCreate,
     UtilizadorResponse,
@@ -12,6 +15,7 @@ from backend.app.schemas.utilizador import (
 router = APIRouter(
     prefix="/utilizadores",
     tags=["Utilizadores"],
+    dependencies=[Depends(obter_utilizador_actual)],
 )
 
 
@@ -27,6 +31,7 @@ def listar_utilizadores(db: Session = Depends(get_db)):
 def criar_utilizador(
     dados: UtilizadorCreate,
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(exigir_perfil("administrador")),
 ):
     existente = (
         db.query(Utilizador)
@@ -101,6 +106,7 @@ def actualizar_utilizador(
     utilizador_id: int,
     dados: UtilizadorUpdate,
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(exigir_perfil("administrador")),
 ):
     utilizador = (
         db.query(Utilizador)
@@ -166,6 +172,7 @@ def actualizar_utilizador(
 def desactivar_utilizador(
     utilizador_id: int,
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(exigir_perfil("administrador")),
 ):
     utilizador = (
         db.query(Utilizador)

@@ -3,6 +3,7 @@ from backend.app.core.dependencies import obter_utilizador_actual
 from backend.app.routers.departamentos import router as departamentos_router
 from backend.app.routers.utilizadores import router as utilizadores_router
 from backend.app.routers.auth import router as auth_router
+from backend.app.routers.documentos import router as documentos_router
 
 
 app = FastAPI(
@@ -43,3 +44,4 @@ def utilizador_actual(
 app.include_router(departamentos_router)
 app.include_router(utilizadores_router)
 app.include_router(auth_router)
+app.include_router(documentos_router)

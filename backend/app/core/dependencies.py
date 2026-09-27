@@ -1,6 +1,7 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+
 from backend.app.core.jwt import verificar_access_token
 
 
@@ -22,3 +23,20 @@ def obter_utilizador_actual(
         )
 
     return payload
+
+def exigir_perfil(*perfis_permitidos: str):
+    def dependencia(
+        utilizador_actual: dict = Depends(obter_utilizador_actual),
+    ) -> dict:
+
+        perfil = utilizador_actual.get("perfil")
+
+        if perfil not in perfis_permitidos:
+            raise HTTPException(
+                status_code=403,
+                detail="Não tem permissão para realizar esta operação.",
+            )
+
+        return utilizador_actual
+
+    return dependencia
