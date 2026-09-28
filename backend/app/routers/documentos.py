@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+from backend.app.services.historico import registar_historico
 from backend.app.core.dependencies import obter_utilizador_actual
 from backend.app.database.database import get_db
 from backend.app.database.models.documento import Documento

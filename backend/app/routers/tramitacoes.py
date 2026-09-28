@@ -9,6 +9,7 @@ from backend.app.schemas.tramitacao import (
     TramitacaoResponse,
     TramitacaoUpdate,
 )
+from backend.app.services.historico import registar_historico
 
 
 router = APIRouter(
@@ -75,6 +76,20 @@ def criar_tramitacao(
     )
 
     db.add(tramitacao)
+    db.flush()
+
+    registar_historico(
+        db=db,
+        accao="Documento encaminhado",
+        descricao=(
+            f"Documento ID {tramitacao.documento_id} encaminhado "
+            f"do departamento {tramitacao.origem_departamento_id} "
+            f"para o departamento {tramitacao.destino_departamento_id}."
+        ),
+        utilizador_id=int(utilizador_actual["sub"]),
+        documento_id=tramitacao.documento_id,
+    )
+
     db.commit()
     db.refresh(tramitacao)
 
@@ -89,6 +104,7 @@ def actualizar_tramitacao(
     tramitacao_id: int,
     dados: TramitacaoUpdate,
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(obter_utilizador_actual),
 ):
     tramitacao = (
         db.query(Tramitacao)
@@ -106,6 +122,18 @@ def actualizar_tramitacao(
 
     for campo, valor in alteracoes.items():
         setattr(tramitacao, campo, valor)
+
+    registar_historico(
+        db=db,
+        accao="Tramitação actualizada",
+        descricao=(
+            f"Tramitação ID {tramitacao.id} do documento "
+            f"ID {tramitacao.documento_id} actualizada. "
+            f"Estado actual: {tramitacao.estado}."
+        ),
+        utilizador_id=int(utilizador_actual["sub"]),
+        documento_id=tramitacao.documento_id,
+    )
 
     db.commit()
     db.refresh(tramitacao)

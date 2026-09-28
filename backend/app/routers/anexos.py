@@ -9,6 +9,7 @@ from backend.app.database.database import get_db
 from backend.app.database.models.anexo import Anexo
 from backend.app.database.models.documento import Documento
 from backend.app.schemas.anexo import AnexoResponse
+from backend.app.services.historico import registar_historico
 
 
 router = APIRouter(
@@ -30,6 +31,7 @@ def carregar_anexo(
     documento_id: int,
     ficheiro: UploadFile = File(...),
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(obter_utilizador_actual),
 ):
     documento = (
         db.query(Documento)
@@ -64,11 +66,23 @@ def carregar_anexo(
     )
 
     db.add(anexo)
+    db.flush()
+
+    registar_historico(
+        db=db,
+        accao="Anexo carregado",
+        descricao=(
+            f"O ficheiro {anexo.nome_original} foi anexado "
+            f"ao documento {documento.numero_entrada}."
+        ),
+        utilizador_id=int(utilizador_actual["sub"]),
+        documento_id=documento_id,
+    )
+
     db.commit()
     db.refresh(anexo)
 
     return anexo
-
 
 @router.get(
     "/documento/{documento_id}",
@@ -128,6 +142,7 @@ def obter_anexo(
 def eliminar_anexo(
     anexo_id: int,
     db: Session = Depends(get_db),
+    utilizador_actual: dict = Depends(obter_utilizador_actual),
 ):
     anexo = (
         db.query(Anexo)
@@ -142,8 +157,22 @@ def eliminar_anexo(
         )
 
     caminho = anexo.caminho
+    nome_original = anexo.nome_original
+    documento_id = anexo.documento_id
 
     db.delete(anexo)
+
+    registar_historico(
+        db=db,
+        accao="Anexo eliminado",
+        descricao=(
+            f"O ficheiro {nome_original} foi eliminado "
+            f"do documento ID {documento_id}."
+        ),
+        utilizador_id=int(utilizador_actual["sub"]),
+        documento_id=documento_id,
+    )
+
     db.commit()
 
     if os.path.exists(caminho):
