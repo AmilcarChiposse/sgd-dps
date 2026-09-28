@@ -7,6 +7,7 @@ from backend.app.routers.documentos import router as documentos_router
 from backend.app.routers.tramitacoes import router as tramitacoes_router
 from backend.app.routers.anexos import router as anexos_router
 from backend.app.routers.historicos import router as historicos_router
+from backend.app.routers.dashboard import router as dashboard_router
 
 
 app = FastAPI(
@@ -51,3 +52,4 @@ app.include_router(documentos_router)
 app.include_router(tramitacoes_router)
 app.include_router(anexos_router)
 app.include_router(historicos_router)
+app.include_router(dashboard_router)

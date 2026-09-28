@@ -1,9 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend.app.services.historico import registar_historico
-from backend.app.core.dependencies import obter_utilizador_actual
 from backend.app.database.database import get_db
 from backend.app.database.models.documento import Documento
+
+from backend.app.core.dependencies import (
+    obter_utilizador_actual,
+    exigir_perfil,
+)
+
 from backend.app.schemas.documento import (
     DocumentoCreate,
     DocumentoResponse,
@@ -60,7 +65,9 @@ def obter_documento(
 def criar_documento(
     dados: DocumentoCreate,
     db: Session = Depends(get_db),
-    utilizador_actual: dict = Depends(obter_utilizador_actual),
+    utilizador_actual: dict = Depends(
+    exigir_perfil("admin", "tecnico")
+),
 ):
     existente = (
         db.query(Documento)

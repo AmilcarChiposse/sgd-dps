@@ -1,9 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
-from backend.app.core.dependencies import obter_utilizador_actual
 from backend.app.database.database import get_db
 from backend.app.database.models.tramitacao import Tramitacao
+
+from backend.app.core.dependencies import (
+    obter_utilizador_actual,
+    exigir_perfil,
+)
+
 from backend.app.schemas.tramitacao import (
     TramitacaoCreate,
     TramitacaoResponse,
@@ -64,7 +68,9 @@ def obter_tramitacao(
 def criar_tramitacao(
     dados: TramitacaoCreate,
     db: Session = Depends(get_db),
-    utilizador_actual: dict = Depends(obter_utilizador_actual),
+    utilizador_actual: dict = Depends(
+    exigir_perfil("admin", "tecnico")
+  ),
 ):
     tramitacao = Tramitacao(
         documento_id=dados.documento_id,
@@ -104,7 +110,9 @@ def actualizar_tramitacao(
     tramitacao_id: int,
     dados: TramitacaoUpdate,
     db: Session = Depends(get_db),
-    utilizador_actual: dict = Depends(obter_utilizador_actual),
+    utilizador_actual: dict = Depends(
+    exigir_perfil("admin", "tecnico")
+),
 ):
     tramitacao = (
         db.query(Tramitacao)
@@ -148,6 +156,9 @@ def actualizar_tramitacao(
 def eliminar_tramitacao(
     tramitacao_id: int,
     db: Session = Depends(get_db),
+    _: dict = Depends(
+        exigir_perfil("admin")
+    ),
 ):
     tramitacao = (
         db.query(Tramitacao)

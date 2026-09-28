@@ -2,15 +2,19 @@ import os
 import uuid
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
-from backend.app.core.dependencies import obter_utilizador_actual
 from backend.app.database.database import get_db
 from backend.app.database.models.anexo import Anexo
 from backend.app.database.models.documento import Documento
 from backend.app.schemas.anexo import AnexoResponse
 from backend.app.services.historico import registar_historico
 
+from backend.app.core.dependencies import (
+    obter_utilizador_actual,
+    exigir_perfil,
+)
 
 router = APIRouter(
     prefix="/anexos",
@@ -31,7 +35,9 @@ def carregar_anexo(
     documento_id: int,
     ficheiro: UploadFile = File(...),
     db: Session = Depends(get_db),
-    utilizador_actual: dict = Depends(obter_utilizador_actual),
+    utilizador_actual: dict = Depends(
+    exigir_perfil("admin", "tecnico")
+),
 ):
     documento = (
         db.query(Documento)
@@ -111,6 +117,36 @@ def listar_anexos_documento(
         .all()
     )
 
+@router.get(
+    "/download/{anexo_id}",
+)
+def descarregar_anexo(
+    anexo_id: int,
+    db: Session = Depends(get_db),
+):
+    anexo = (
+        db.query(Anexo)
+        .filter(Anexo.id == anexo_id)
+        .first()
+    )
+
+    if anexo is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Anexo não encontrado.",
+        )
+
+    if not os.path.exists(anexo.caminho):
+        raise HTTPException(
+            status_code=404,
+            detail="Ficheiro não encontrado no armazenamento.",
+        )
+
+    return FileResponse(
+        path=anexo.caminho,
+        filename=anexo.nome_original,
+        media_type=anexo.tipo_ficheiro or "application/octet-stream",
+    )
 
 @router.get(
     "/{anexo_id}",
@@ -142,7 +178,9 @@ def obter_anexo(
 def eliminar_anexo(
     anexo_id: int,
     db: Session = Depends(get_db),
-    utilizador_actual: dict = Depends(obter_utilizador_actual),
+    utilizador_actual: dict = Depends(
+        exigir_perfil("admin")
+    ),
 ):
     anexo = (
         db.query(Anexo)
