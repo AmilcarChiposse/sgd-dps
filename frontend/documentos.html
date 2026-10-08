@@ -1,0 +1,779 @@
+```html
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SGD-DPS | Documentos</title>
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/documentos.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- MENU LATERAL -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">DPS</div>
+
+                <div>
+                    <h1>SGD-DPS</h1>
+                    <span>Gestão Documental</span>
+                </div>
+            </div>
+
+
+            <nav class="menu">
+
+                <a href="/app" class="menu-item">
+                    <span>⌂</span>
+                    Dashboard
+                </a>
+
+                <a href="/documentos" class="menu-item active">
+                    <span>▣</span>
+                    Documentos
+                </a>
+
+                <a href="/tramitacoes" class="menu-item">
+                    <span>↔</span>
+                    Tramitações
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>📎</span>
+                    Anexos
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>♙</span>
+                    Utilizadores
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>▤</span>
+                    Departamentos
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>◷</span>
+                    Histórico
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-footer">
+                <span>Sistema de Gestão Documental</span>
+                <strong>DPS Zambézia</strong>
+            </div>
+
+        </aside>
+
+
+        <!-- CONTEÚDO -->
+        <main class="main">
+
+            <header class="topbar">
+
+                <div>
+                    <h2>Documentos</h2>
+
+                    <p>
+                        Gestão e consulta dos documentos registados
+                    </p>
+                </div>
+
+
+                <div class="user-area">
+
+                    <div class="user-avatar">
+                        A
+                    </div>
+
+                    <div>
+                        <strong>Utilizador</strong>
+                        <small>Perfil</small>
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <section class="content">
+
+                <!-- CABEÇALHO DA PÁGINA -->
+                <div class="page-header">
+
+                    <div>
+                        <h3>Documentos registados</h3>
+
+                        <p>
+                            Lista de documentos existentes no sistema
+                        </p>
+                    </div>
+
+                    <button type="button" class="btn-primary" id="botao-novo-documento">
+                        + Novo documento
+                    </button>
+
+                </div>
+
+
+                <!-- PESQUISA -->
+                <div class="search-panel">
+
+                    <input type="text" id="pesquisa-documentos"
+                        placeholder="Pesquisar por número, assunto, remetente ou tipo...">
+
+                </div>
+
+
+                <!-- TABELA -->
+                <div class="documents-panel">
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>N.º Entrada</th>
+                                    <th>Tipo</th>
+                                    <th>Assunto</th>
+                                    <th>Remetente</th>
+                                    <th>Data Recepção</th>
+                                    <th>Prioridade</th>
+                                    <th>Estado</th>
+                                    <th>Acções</th>
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="documents-body">
+
+                                <tr>
+                                    <td colspan="8" class="loading">
+                                        A carregar documentos...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MODAL — NOVO DOCUMENTO
+         ===================================================== -->
+
+    <div id="modal-documento" class="modal-overlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2>Novo documento</h2>
+
+                    <p>
+                        Registar um novo documento no sistema
+                    </p>
+                </div>
+
+                <button type="button" id="fechar-modal" class="modal-close">
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="form-documento">
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="numero_entrada">
+                            N.º de entrada *
+                        </label>
+
+                        <input type="text" id="numero_entrada" required placeholder="Ex.: DPS-2026-0005">
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="tipo">
+                            Tipo *
+                        </label>
+
+                        <input type="text" id="tipo" required placeholder="Ex.: Ofício">
+
+                    </div>
+
+
+
+                    <div class="form-group full-width">
+
+                        <label for="assunto">
+                            Assunto *
+                        </label>
+
+                        <textarea id="assunto" required placeholder="Introduza o assunto do documento"></textarea>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="remetente">
+                            Remetente *
+                        </label>
+
+                        <input type="text" id="remetente" required placeholder="Nome da instituição ou pessoa">
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="destinatario">
+                            Destinatário
+                        </label>
+
+                        <input type="text" id="destinatario" placeholder="Nome do destinatário">
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="data_documento">
+                            Data do documento
+                        </label>
+
+                        <input type="date" id="data_documento">
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="data_rececao">
+                            Data de recepção *
+                        </label>
+
+                        <input type="date" id="data_rececao" required>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="prioridade">
+                            Prioridade
+                        </label>
+
+                        <select id="prioridade">
+
+                            <option value="normal">
+                                Normal
+                            </option>
+
+                            <option value="alta">
+                                Alta
+                            </option>
+
+                            <option value="urgente">
+                                Urgente
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="estado">
+                            Estado
+                        </label>
+
+                        <select id="estado">
+
+                            <option value="recebido">
+                                Recebido
+                            </option>
+
+                            <option value="em_analise">
+                                Em análise
+                            </option>
+
+                            <option value="concluido">
+                                Concluído
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="departamento_id">
+                            Departamento
+                        </label>
+
+                        <input type="number" id="departamento_id" placeholder="ID do departamento">
+
+                    </div>
+
+
+                </div>
+
+
+                <div id="mensagem-documento" class="form-message"></div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button" id="cancelar-documento" class="btn-cancel">
+                        Cancelar
+                    </button>
+
+
+                    <button type="submit" id="guardar-documento" class="btn-save">
+                        Guardar documento
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MODAL — VER DOCUMENTO
+         ===================================================== -->
+
+    <div id="modal-ver-documento" class="modal-overlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2>Ver documento</h2>
+
+                    <p>
+                        Detalhes do documento seleccionado
+                    </p>
+                </div>
+
+
+                <button type="button" id="fechar-modal-ver" class="modal-close">
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="document-details">
+
+
+                <div class="detail-item">
+
+                    <span>N.º de entrada</span>
+
+                    <strong id="ver-numero">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>Tipo</span>
+
+                    <strong id="ver-tipo">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item full-width">
+
+                    <span>Assunto</span>
+
+                    <strong id="ver-assunto">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>Remetente</span>
+
+                    <strong id="ver-remetente">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>Destinatário</span>
+
+                    <strong id="ver-destinatario">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>Data do documento</span>
+
+                    <strong id="ver-data-documento">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>Data de recepção</span>
+
+                    <strong id="ver-data-recepcao">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>Prioridade</span>
+
+                    <strong id="ver-prioridade">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>Estado</span>
+
+                    <strong id="ver-estado">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>Departamento</span>
+
+                    <strong id="ver-departamento">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>Registado por</span>
+
+                    <strong id="ver-registado-por">
+                        -
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button type="button" id="fechar-documento" class="btn-cancel">
+                    Fechar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MODAL — EDITAR DOCUMENTO
+         ===================================================== -->
+
+    <div id="modal-editar-documento" class="modal-overlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2>Editar documento</h2>
+
+                    <p>
+                        Actualizar os dados do documento
+                    </p>
+                </div>
+
+
+                <button type="button" id="fechar-modal-editar" class="modal-close">
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="form-editar-documento">
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="editar-numero_entrada">
+                            N.º de entrada *
+                        </label>
+
+                        <input type="text" id="editar-numero_entrada" required>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="editar-tipo">
+                            Tipo *
+                        </label>
+
+                        <input type="text" id="editar-tipo" required>
+
+                    </div>
+
+
+
+                    <div class="form-group full-width">
+
+                        <label for="editar-assunto">
+                            Assunto *
+                        </label>
+
+                        <textarea id="editar-assunto" required></textarea>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="editar-remetente">
+                            Remetente *
+                        </label>
+
+                        <input type="text" id="editar-remetente" required>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="editar-destinatario">
+                            Destinatário
+                        </label>
+
+                        <input type="text" id="editar-destinatario">
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="editar-data_documento">
+                            Data do documento
+                        </label>
+
+                        <input type="date" id="editar-data_documento">
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="editar-data_rececao">
+                            Data de recepção *
+                        </label>
+
+                        <input type="date" id="editar-data_rececao" required>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="editar-prioridade">
+                            Prioridade
+                        </label>
+
+                        <select id="editar-prioridade">
+
+                            <option value="normal">
+                                Normal
+                            </option>
+
+                            <option value="alta">
+                                Alta
+                            </option>
+
+                            <option value="urgente">
+                                Urgente
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="editar-estado">
+                            Estado
+                        </label>
+
+                        <select id="editar-estado">
+
+                            <option value="recebido">
+                                Recebido
+                            </option>
+
+                            <option value="em_analise">
+                                Em análise
+                            </option>
+
+                            <option value="concluido">
+                                Concluído
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="editar-departamento_id">
+                            Departamento
+                        </label>
+
+                        <input type="number" id="editar-departamento_id">
+
+                    </div>
+
+
+                </div>
+
+
+                <div id="mensagem-editar-documento" class="form-message"></div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button" id="cancelar-edicao" class="btn-cancel">
+                        Cancelar
+                    </button>
+
+
+                    <button type="submit" id="guardar-edicao" class="btn-save">
+                        Guardar alterações
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="/frontend/js/documentos.js"></script>
+
+</body>
+
+</html>
+```

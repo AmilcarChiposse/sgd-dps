@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SGD-DPS | Tramitações</title>
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/documentos.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- MENU LATERAL -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">DPS</div>
+
+                <div>
+                    <h1>SGD-DPS</h1>
+                    <span>Gestão Documental</span>
+                </div>
+            </div>
+
+            <nav class="menu">
+
+                <a href="/app" class="menu-item">
+                    <span>⌂</span>
+                    Dashboard
+                </a>
+
+                <a href="/documentos" class="menu-item">
+                    <span>▣</span>
+                    Documentos
+                </a>
+
+                <a href="/tramitacoes" class="menu-item active">
+                    <span>↔</span>
+                    Tramitações
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>📎</span>
+                    Anexos
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>♙</span>
+                    Utilizadores
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>▤</span>
+                    Departamentos
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>◷</span>
+                    Histórico
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <span>Sistema de Gestão Documental</span>
+                <strong>DPS Zambézia</strong>
+            </div>
+
+        </aside>
+
+
+        <!-- CONTEÚDO -->
+        <main class="main">
+
+            <header class="topbar">
+
+                <div>
+                    <h2>Tramitações</h2>
+
+                    <p>
+                        Gestão e acompanhamento dos documentos encaminhados
+                    </p>
+                </div>
+
+                <div class="user-area">
+
+                    <div class="user-avatar">
+                        A
+                    </div>
+
+                    <div>
+                        <strong id="nome-utilizador">
+                            Utilizador
+                        </strong>
+
+                        <small id="perfil-utilizador">
+                            Perfil
+                        </small>
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <section class="content">
+
+                <!-- CABEÇALHO -->
+                <div class="page-header">
+
+                    <div>
+                        <h3>Tramitações registadas</h3>
+
+                        <p>
+                            Lista dos documentos encaminhados entre departamentos
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-primary"
+                        id="botao-nova-tramitacao"
+                    >
+                        + Nova tramitação
+                    </button>
+
+                </div>
+
+
+                <!-- PESQUISA -->
+                <div class="search-panel">
+
+                    <input
+                        type="text"
+                        id="pesquisa-tramitacoes"
+                        placeholder="Pesquisar por documento, departamento, estado ou observação..."
+                    >
+
+                </div>
+
+
+                <!-- TABELA -->
+                <div class="documents-panel">
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Documento</th>
+                                    <th>Origem</th>
+                                    <th>Destino</th>
+                                    <th>Data</th>
+                                    <th>Estado</th>
+                                    <th>Observação</th>
+                                    <th>Acções</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="tramitacoes-body">
+
+                                <tr>
+                                    <td colspan="8" class="loading">
+                                        A carregar tramitações...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL — NOVA TRAMITAÇÃO
+         ===================================================== -->
+
+    <div id="modal-tramitacao" class="modal-overlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2>Nova tramitação</h2>
+
+                    <p>
+                        Encaminhar um documento para outro departamento
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    id="fechar-modal-tramitacao"
+                    class="modal-close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="form-tramitacao">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="documento_id">
+                            Documento *
+                        </label>
+
+                        <input
+                            type="number"
+                            id="documento_id"
+                            required
+                            placeholder="ID do documento"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="origem_departamento_id">
+                            Departamento de origem
+                        </label>
+
+                        <input
+                            type="number"
+                            id="origem_departamento_id"
+                            placeholder="ID do departamento"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="destino_departamento_id">
+                            Departamento de destino
+                        </label>
+
+                        <input
+                            type="number"
+                            id="destino_departamento_id"
+                            placeholder="ID do departamento"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="estado-tramitacao">
+                            Estado
+                        </label>
+
+                        <select id="estado-tramitacao">
+
+                            <option value="pendente">
+                                Pendente
+                            </option>
+
+                            <option value="em_analise">
+                                Em análise
+                            </option>
+
+                            <option value="concluido">
+                                Concluído
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="observacao-tramitacao">
+                            Observação
+                        </label>
+
+                        <textarea
+                            id="observacao-tramitacao"
+                            placeholder="Introduza uma observação sobre o encaminhamento"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="mensagem-tramitacao"
+                    class="form-message"
+                ></div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        id="cancelar-tramitacao"
+                        class="btn-cancel"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="guardar-tramitacao"
+                        class="btn-save"
+                    >
+                        Guardar tramitação
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL — VER TRAMITAÇÃO
+         ===================================================== -->
+
+    <div id="modal-ver-tramitacao" class="modal-overlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2>Ver tramitação</h2>
+
+                    <p>
+                        Detalhes do encaminhamento
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    id="fechar-modal-ver-tramitacao"
+                    class="modal-close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="document-details">
+
+                <div class="detail-item">
+                    <span>ID da tramitação</span>
+                    <strong id="ver-tramitacao-id">-</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>ID do documento</span>
+                    <strong id="ver-documento-id">-</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Departamento de origem</span>
+                    <strong id="ver-origem">-</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Departamento de destino</span>
+                    <strong id="ver-destino">-</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Encaminhado por</span>
+                    <strong id="ver-encaminhado-por">-</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Data de encaminhamento</span>
+                    <strong id="ver-data-tramitacao">-</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Estado</span>
+                    <strong id="ver-estado-tramitacao">-</strong>
+                </div>
+
+                <div class="detail-item full-width">
+                    <span>Observação</span>
+                    <strong id="ver-observacao">-</strong>
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    id="fechar-tramitacao"
+                    class="btn-cancel"
+                >
+                    Fechar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL — EDITAR TRAMITAÇÃO
+         ===================================================== -->
+
+    <div id="modal-editar-tramitacao" class="modal-overlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2>Editar tramitação</h2>
+
+                    <p>
+                        Actualizar o encaminhamento
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    id="fechar-modal-editar-tramitacao"
+                    class="modal-close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="form-editar-tramitacao">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="editar-origem_departamento_id">
+                            Departamento de origem
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editar-origem_departamento_id"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="editar-destino_departamento_id">
+                            Departamento de destino
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editar-destino_departamento_id"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="editar-estado-tramitacao">
+                            Estado
+                        </label>
+
+                        <select id="editar-estado-tramitacao">
+
+                            <option value="pendente">
+                                Pendente
+                            </option>
+
+                            <option value="em_analise">
+                                Em análise
+                            </option>
+
+                            <option value="concluido">
+                                Concluído
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="editar-observacao-tramitacao">
+                            Observação
+                        </label>
+
+                        <textarea
+                            id="editar-observacao-tramitacao"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="mensagem-editar-tramitacao"
+                    class="form-message"
+                ></div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        id="cancelar-edicao-tramitacao"
+                        class="btn-cancel"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="guardar-edicao-tramitacao"
+                        class="btn-save"
+                    >
+                        Guardar alterações
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="/frontend/js/tramitacoes.js"></script>
+
+</body>
+
+</html>

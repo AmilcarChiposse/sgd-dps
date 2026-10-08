@@ -1,8 +1,12 @@
+import os
+from backend.app.database.models.anexo import Anexo
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend.app.services.historico import registar_historico
 from backend.app.database.database import get_db
 from backend.app.database.models.documento import Documento
+from backend.app.database.models.tramitacao import Tramitacao
+from backend.app.database.models.historico import Historico
 
 from backend.app.core.dependencies import (
     obter_utilizador_actual,
@@ -66,7 +70,7 @@ def criar_documento(
     dados: DocumentoCreate,
     db: Session = Depends(get_db),
     utilizador_actual: dict = Depends(
-    exigir_perfil("admin", "tecnico")
+    exigir_perfil("admin", "administrador", "tecnico")
 ),
 ):
     existente = (
@@ -176,7 +180,41 @@ def eliminar_documento(
             detail="Documento não encontrado.",
         )
 
+    # Guardar os caminhos dos ficheiros antes de eliminar os anexos
+    anexos = (
+        db.query(Anexo)
+        .filter(Anexo.documento_id == documento_id)
+        .all()
+    )
+
+    caminhos_anexos = [anexo.caminho for anexo in anexos]
+
+    # Eliminar os anexos da base de dados
+    for anexo in anexos:
+        db.delete(anexo)
+
+    # Eliminar tramitações associadas ao documento
+    db.query(Tramitacao).filter(
+        Tramitacao.documento_id == documento_id
+    ).delete(
+        synchronize_session=False
+    )
+
+    # Preservar o histórico, retirando a referência ao documento
+    db.query(Historico).filter(
+        Historico.documento_id == documento_id
+    ).update(
+        {"documento_id": None},
+        synchronize_session=False,
+    )
+
+    # Eliminar o documento
     db.delete(documento)
     db.commit()
+
+    # Eliminar os ficheiros físicos dos anexos
+    for caminho in caminhos_anexos:
+        if caminho and os.path.exists(caminho):
+            os.remove(caminho)
 
     return documento

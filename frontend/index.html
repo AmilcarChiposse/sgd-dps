@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SGD-DPS | Sistema de Gestão Documental</title>
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- MENU LATERAL -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">DPS</div>
+
+                <div>
+                    <h1>SGD-DPS</h1>
+                    <span>Gestão Documental</span>
+                </div>
+            </div>
+
+            <nav class="menu">
+
+                <a href="#" class="menu-item active">
+                    <span>⌂</span>
+                    Dashboard
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>▣</span>
+                    Documentos
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>↔</span>
+                    Tramitações
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>📎</span>
+                    Anexos
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>♙</span>
+                    Utilizadores
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>▤</span>
+                    Departamentos
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>◷</span>
+                    Histórico
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <span>Sistema de Gestão Documental</span>
+                <strong>DPS Zambézia</strong>
+            </div>
+
+        </aside>
+
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main">
+
+            <!-- CABEÇALHO -->
+            <header class="topbar">
+
+                <div>
+                    <h2>Dashboard</h2>
+                    <p>Visão geral do sistema de gestão documental</p>
+                </div>
+
+                <div class="user-area">
+                    <div class="user-avatar">A</div>
+
+                    <div>
+                        <strong>Utilizador</strong>
+                        <small>Administrador</small>
+                    </div>
+                </div>
+
+            </header>
+
+
+            <!-- CONTEÚDO -->
+            <section class="content">
+
+                <!-- CARTÕES -->
+                <div class="cards">
+
+                    <div class="card">
+                        <div class="card-icon">▣</div>
+
+                        <div>
+                            <span>Total de documentos</span>
+                            <strong id="total-documentos">—</strong>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-icon">↓</div>
+
+                        <div>
+                            <span>Documentos recebidos</span>
+                            <strong id="documentos-recebidos">—</strong>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-icon">↔</div>
+
+                        <div>
+                            <span>Tramitações</span>
+                            <strong id="total-tramitacoes">—</strong>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-icon">!</div>
+
+                        <div>
+                            <span>Tramitações pendentes</span>
+                            <strong id="tramitacoes-pendentes">—</strong>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-icon">📎</div>
+
+                        <div>
+                            <span>Anexos</span>
+                            <strong id="total-anexos">—</strong>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-icon">✓</div>
+
+                        <div>
+                            <span>Concluídos</span>
+                            <strong id="documentos-concluidos">—</strong>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIVIDADE RECENTE -->
+                <div class="activity-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <h3>Actividade recente</h3>
+                            <p>Últimas operações realizadas no sistema</p>
+                        </div>
+
+                    </div>
+
+                    <div id="activity-list">
+
+                        <div class="loading">
+                            A carregar actividade...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="/frontend/js/app.js"></script>
+
+</body>
+</html>

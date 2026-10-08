@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SGD-DPS | Login</title>
+
+    <link rel="stylesheet" href="/frontend/css/login.css">
+</head>
+
+<body>
+
+    <div class="login-page">
+
+        <div class="login-card">
+
+            <div class="logo-area">
+
+                <div class="logo-icon">
+                    DPS
+                </div>
+
+                <h1>SGD-DPS</h1>
+
+                <p>
+                    Sistema de Gestão Documental
+                </p>
+
+                <span>
+                    Direcção Provincial de Saúde
+                </span>
+
+            </div>
+
+
+            <div class="login-content">
+
+                <h2>Iniciar sessão</h2>
+
+                <p class="login-description">
+                    Introduza as suas credenciais para aceder ao sistema.
+                </p>
+
+
+                <form id="login-form">
+
+                    <div class="form-group">
+
+                        <label for="username">
+                            Username
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Introduza o username"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="senha">
+                            Senha
+                        </label>
+
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Introduza a senha"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div
+                        id="login-error"
+                        class="login-error"
+                    ></div>
+
+
+                    <button
+                        type="submit"
+                        id="login-button"
+                    >
+                        Entrar
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <div class="login-footer">
+
+                <span>
+                    SGD-DPS v0.1.0
+                </span>
+
+                <span>
+                    Sistema em desenvolvimento
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="/frontend/js/login.js"></script>
+
+</body>
+</html>

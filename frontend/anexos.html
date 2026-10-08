@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGD-DPS - Gestão de Anexos</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div class="layout-container">
+        <!-- Sidebar / Navegação -->
+        <aside class="sidebar">
+            <h2>SGD-DPS</h2>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="documentos.html">Documentos</a></li>
+                    <li><a href="tramitacoes.html">Tramitações</a></li>
+                    <li><a href="anexos.html" class="active">Anexos</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <header class="header">
+                <h1>Gestão de Anexos</h1>
+                <div class="user-info">
+                    <span id="nome-utilizador">Carregando...</span>
+                    <small id="perfil-utilizador"></small>
+                </div>
+            </header>
+
+            <section class="content">
+                <!-- Seleção de Documento -->
+                <div class="card search-card">
+                    <div class="form-group inline">
+                        <label for="documento-id-select">ID do Documento:</label>
+                        <input type="number" id="documento-id-select" placeholder="Ex: 1" min="1">
+                        <button id="btn-carregar-anexos" class="btn btn-primary">Carregar Anexos</button>
+                    </div>
+                </div>
+
+                <!-- Painel de Ações -->
+                <div class="action-bar">
+                    <button id="btn-abrir-modal-upload" class="btn btn-success" disabled>+ Carregar Novo Anexo</button>
+                </div>
+
+                <!-- Tabela de Anexos -->
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome Original</th>
+                                <th>Tipo</th>
+                                <th>Tamanho</th>
+                                <th>Data de Upload</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="anexos-body">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 20px;">
+                                    Introduza um ID de documento e clique em "Carregar Anexos".
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL: UPLOAD DE ANEXO -->
+    <div id="modal-upload-anexo" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Carregar Anexo para Documento #<span id="upload-doc-id-label"></span></h3>
+                <span class="close-btn" id="fechar-modal-upload">&times;</span>
+            </div>
+            <form id="form-upload-anexo">
+                <div class="modal-body">
+                    <div id="mensagem-upload" class="form-message"></div>
+
+                    <div class="form-group">
+                        <label for="ficheiro-input">Selecione o Ficheiro:*</label>
+                        <input type="file" id="ficheiro-input" name="ficheiro" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelar-upload">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-enviar-ficheiro">Submeter Ficheiro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/anexos.js"></script>
+</body>
+</html>
